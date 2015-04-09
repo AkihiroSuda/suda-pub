@@ -116,7 +116,7 @@ try:
     run_nc_stat(1)
     run_nc_stat(2)
 
-    INFO('Resetting server.2 to the initial ensemble [2]'); prompt()
+    INFO('Resetting server.2 to the initial ensemble [1]'); prompt()
     reset_zk_dirs(2)
 
     INFO('Starting server.2'); prompt()
