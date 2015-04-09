@@ -12,7 +12,7 @@ Usage
     Invoking Reconfig [1]->[1,2]
     Invoking Reconfig [1,2]->[2]
     Killing server.2 (pid=63)
-    Resetting server.2 to the initial ensemble [2]
+    Resetting server.2 to the initial ensemble [1]
     Starting server.2
     Sleeping for 30 seconds
     /zk01_log: 81666585 bytes
