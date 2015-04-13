@@ -1,0 +1,31 @@
+From 4d91f3bd4dd9dee3dfcabfeb859e63221701b58b Mon Sep 17 00:00:00 2001
+From: Akihiro Suda <suda.akihiro@lab.ntt.co.jp>
+Date: Fri, 10 Apr 2015 18:23:09 +0900
+Subject: [PATCH] Learner: shutdown when the leader's epoch is less than the
+ accepted epoch
+
+Signed-off-by: Akihiro Suda <suda.akihiro@lab.ntt.co.jp>
+---
+ src/java/main/org/apache/zookeeper/server/quorum/Learner.java | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
+
+diff --git a/src/java/main/org/apache/zookeeper/server/quorum/Learner.java b/src/java/main/org/apache/zookeeper/server/quorum/Learner.java
+index 6630751..9e51d59 100644
+--- a/src/java/main/org/apache/zookeeper/server/quorum/Learner.java
++++ b/src/java/main/org/apache/zookeeper/server/quorum/Learner.java
+@@ -328,7 +328,11 @@ protected long registerWithLeader(int pktType) throws IOException{
+         		// the -1 indicates that this reply should not count as an ack for the new epoch
+                 wrappedEpochBytes.putInt(-1);
+         	} else {
+-        		throw new IOException("Leaders epoch, " + newEpoch + " is less than accepted epoch, " + self.getAcceptedEpoch());
++                Exception e = new IOException("Leaders epoch, " + newEpoch + " is less than accepted epoch, " + self.getAcceptedEpoch());
++                LOG.error("Unrecoverable error, exiting abnormally", e);
++                System.err.println("Unrecoverable error, exiting abnormally");
++                // NOTE: Do not call self.shutdown() here, as it leads QuorumPeerMain to call System.exit(0).
++                System.exit(1);
+         	}
+         	QuorumPacket ackNewEpoch = new QuorumPacket(Leader.ACKEPOCH, lastLoggedZxid, epochBytes, null);
+         	writePacket(ackNewEpoch, true);
+-- 
+2.1.0
+
